@@ -29,8 +29,10 @@ export function App() {
     try {
       const input = JSON.parse(draft) as { name?: unknown; address?: unknown }
       if (typeof input.name !== 'string' || !input.name.trim() || typeof input.address !== 'string') throw new Error('需要 name 和 address 两个文本字段。')
-      if (!/^(https:\/\/|demo:\/\/)/.test(input.address)) throw new Error('只接受 HTTPS 或演示地址；导入不会自动连接或播放。')
-      setSources(current => [...current, { id: crypto.randomUUID(), name: input.name.trim(), address: input.address.trim(), enabled: false, updated: '尚未启用' }])
+      const name = input.name.trim()
+      const address = input.address.trim()
+      if (!/^(https:\/\/|demo:\/\/)/.test(address)) throw new Error('只接受 HTTPS 或演示地址；导入不会自动连接或播放。')
+      setSources(current => [...current, { id: crypto.randomUUID(), name, address, enabled: false, updated: '尚未启用' }])
       setDraft(''); setNotice('配置已保存为停用状态。请先审阅来源和授权，再手动启用。')
     } catch (error) { setNotice(error instanceof Error ? error.message : '无法读取配置。') }
   }
